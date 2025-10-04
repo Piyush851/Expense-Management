@@ -4,7 +4,6 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 import { ExpenseProvider } from "./context/ExpenseContext.jsx";
 
 import Navbar from "./components/Navbar.jsx";
-import Footer from "./components/Footer.jsx";
 
 // Pages
 import Dashboard from "./pages/Dashboard.jsx";
@@ -46,7 +45,6 @@ export default function App() {
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/dashboard" />} />
           </Routes>
-          <Footer />
         </BrowserRouter>
       </ExpenseProvider>
     </AuthProvider>

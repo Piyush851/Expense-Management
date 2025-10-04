@@ -28,10 +28,6 @@ export default function Reports() {
 
   return (
     <div className="p-6">
-<<<<<<< HEAD
-      <h1 className="text-2xl font-bold mb-4">Reports</h1>
-      <p className="font-mg bg-zinc-600 text-xl ">View charts and reports of company expenses.</p>
-=======
       <h1 className="text-3xl font-bold mb-6">Expense Reports</h1>
 
       {/* Summary Cards */}
@@ -96,7 +92,6 @@ export default function Reports() {
           <Legend />
         </PieChart>
       </div>
->>>>>>> 826bd52 (Updated UI)
     </div>
   );
 }
