@@ -4,8 +4,16 @@ const ExpenseContext = createContext();
 
 export const ExpenseProvider = ({ children }) => {
   const [expenses, setExpenses] = useState([
-    // initial mock data
-    { id: 1, user: "John Doe", amount: 100, category: "Travel", status: "Pending", date: "2025-10-04", description: "Taxi fare" },
+    {
+      id: 1,
+      user: "John Doe",
+      amount: 100,
+      category: "Travel",
+      status: "Pending",
+      date: "2025-10-04",
+      description: "Taxi fare",
+      manager: "Manager A",
+    },
   ]);
 
   const addExpense = (expense) => {
@@ -13,9 +21,7 @@ export const ExpenseProvider = ({ children }) => {
   };
 
   const updateExpenseStatus = (id, status) => {
-    setExpenses(
-      expenses.map((exp) => (exp.id === id ? { ...exp, status } : exp))
-    );
+    setExpenses(expenses.map((exp) => (exp.id === id ? { ...exp, status } : exp)));
   };
 
   return (
@@ -26,3 +32,4 @@ export const ExpenseProvider = ({ children }) => {
 };
 
 export const useExpenses = () => useContext(ExpenseContext);
+
