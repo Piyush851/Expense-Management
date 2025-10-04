@@ -1,32 +1,55 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import React from 'react'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-import ApprovalCard from './components/ApprovalCard'
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext.jsx";
+import { ExpenseProvider } from "./context/ExpenseContext.jsx";
 
-const App = () => {
-  return (
-    <Router>
-      <div className="min-h-screen flex flex-col">
-        {/* Navbar always visible */}
-        <Navbar />
+import Navbar from "./components/Navbar.jsx";
+import Footer from "./components/Footer.jsx";
 
-        {/* Page content */}
-        <div className="flex-grow px-6 py-4">
-          <Routes>
-            {/* <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/expenses" element={<Expenses />} /> */}
-          </Routes>
-          {/* <ApprovalCard /> */}
-        </div>
+// Pages
+import Dashboard from "./pages/Dashboard.jsx";
+import Expenses from "./pages/Expenses.jsx";
+import AddExpense from "./pages/AddExpense.jsx";
+import UserManagement from "./pages/UserManagement.jsx";
+import Approvals from "./pages/Approvals.jsx";
+import Reports from "./pages/Reports.jsx";
+import Login from "./pages/Login.jsx";
+import Signup from "./pages/Signup.jsx";
 
-        <Footer />
-      </div>
-    </Router>
-  )
+// Private route
+import { useAuth } from "./context/AuthContext.jsx";
+
+function PrivateRoute({ children }) {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/login" />;
 }
 
-export default App
+export default function App() {
+  return (
+    <AuthProvider>
+      <ExpenseProvider>
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            {/* Public */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+
+            {/* Private */}
+            <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+            <Route path="/expenses" element={<PrivateRoute><Expenses /></PrivateRoute>} />
+            <Route path="/add-expense" element={<PrivateRoute><AddExpense /></PrivateRoute>} />
+            <Route path="/approvals" element={<PrivateRoute><Approvals /></PrivateRoute>} />
+            <Route path="/users" element={<PrivateRoute><UserManagement /></PrivateRoute>} />
+            <Route path="/reports" element={<PrivateRoute><Reports /></PrivateRoute>} />
+
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/dashboard" />} />
+          </Routes>
+          <Footer />
+        </BrowserRouter>
+      </ExpenseProvider>
+    </AuthProvider>
+  );
+}
+
