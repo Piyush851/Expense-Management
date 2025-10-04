@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext.jsx";
 import { ExpenseProvider } from "./context/ExpenseContext.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 import Navbar from "./components/Navbar.jsx";
 
@@ -23,6 +24,8 @@ function PrivateRoute({ children }) {
   return user ? children : <Navigate to="/login" />;
 }
 
+
+
 export default function App() {
   return (
     <AuthProvider>
@@ -35,6 +38,12 @@ export default function App() {
             <Route path="/signup" element={<Signup />} />
 
             {/* Private */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
             <Route path="/expenses" element={<PrivateRoute><Expenses /></PrivateRoute>} />
             <Route path="/add-expense" element={<PrivateRoute><AddExpense /></PrivateRoute>} />

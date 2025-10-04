@@ -1,42 +1,43 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import * as authService from "../services/authService.js";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // logged-in user
+  const [user, setUser] = useState(null);
 
-  // localStorage से user load करें
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
-    if (savedUser) setUser(JSON.parse(savedUser));
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
   }, []);
 
-  // Signup - mock (frontend-only)
-  const signup = (name, email, password, role = "Employee") => {
-    // normally backend API call here
-    const newUser = { id: Date.now(), name, email, role };
-    localStorage.setItem("signupUser", JSON.stringify(newUser));
-    alert("Signup successful! Please login.");
-    return true;
-  };
-
-  // Login - mock
-  const login = (email, password) => {
-    const savedUser = JSON.parse(localStorage.getItem("signupUser"));
-    if (savedUser && savedUser.email === email) {
-      setUser(savedUser);
-      localStorage.setItem("user", JSON.stringify(savedUser));
+  const signup = async (name, email, password) => {
+    try {
+      const res = await authService.signup({ name, email, password });
+      setUser(res);
       return true;
-    } else {
-      alert("Invalid credentials or signup first");
+    } catch (err) {
+      console.error("Signup error:", err.response?.data || err.message);
       return false;
     }
   };
 
-  // Logout
+  const login = async (email, password) => {
+    try {
+      const res = await authService.login({ email, password });
+      setUser(res);
+      return true;
+    } catch (err) {
+      console.error("Login error:", err.response?.data || err.message);
+      return false;
+    }
+  };
+
   const logout = () => {
+    authService.logout();
     setUser(null);
-    localStorage.removeItem("user");
   };
 
   return (
@@ -47,4 +48,3 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
-
